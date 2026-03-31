@@ -63,7 +63,7 @@ Google News RSS 데이터를 기반으로 최신 뉴스를 가져오고, 핵심 
 
 ## 🔗 배포 링크
 
-👉 [(여기에 GitHub Pages 링크 넣기)](https://dbtpdud.github.io/ai-news-web/)
+👉 [(사이트 링크)](https://dbtpdud.github.io/ai-news-web/)
 
 ---
 
