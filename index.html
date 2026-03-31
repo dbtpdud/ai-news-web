@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 5분 뉴스 요약</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Arial", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      color: #1f2937;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      padding: 28px;
+      backdrop-filter: blur(8px);
+    }
+
+    .top-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .title-box h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .title-box p {
+      color: #6b7280;
+      line-height: 1.6;
+      font-size: 0.96rem;
+    }
+
+    .date-box {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 14px 16px;
+      min-width: 180px;
+      text-align: center;
+    }
+
+    .date-box .label {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+
+    .date-box .date {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin: 16px 0 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .primary-btn {
+      background: #111827;
+      color: white;
+    }
+
+    .sub-btn {
+      background: white;
+      color: #111827;
+      border: 1px solid #d1d5db;
+    }
+
+    .status {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      padding: 14px 16px;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      color: #475569;
+      font-size: 0.93rem;
+      line-height: 1.5;
+    }
+
+    .news-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .news-card {
+      background: linear-gradient(180deg, #ffffff, #f8fafc);
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+
+    .news-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .news-number {
+      background: #ede9fe;
+      color: #6d28d9;
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .news-card h3 {
+      font-size: 1.08rem;
+      line-height: 1.5;
+      color: #111827;
+      margin-bottom: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .news-card p {
+      color: #4b5563;
+      line-height: 1.65;
+      font-size: 0.96rem;
+      margin-bottom: 12px;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 6px 11px;
+      border-radius: 999px;
+    }
+
+    .news-card a {
+      text-decoration: none;
+      color: #2563eb;
+      font-size: 0.92rem;
+      font-weight: bold;
+    }
+
+    .news-card a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.86rem;
+      line-height: 1.6;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 28px;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 14px;
+      }
+
+      .container {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .title-box h1 {
+        font-size: 1.55rem;
+      }
+
+      .date-box {
+        width: 100%;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="container">
+      <div class="top-badge">AI 웹 개발 과제</div>
+
+      <div class="header">
+        <div class="title-box">
+          <h1>오늘의 5분 뉴스 요약</h1>
+          <p>최신 뉴스를 5개만 빠르게 확인하고, 필요하면 원문 기사까지 바로 볼 수 있도록 만든 웹페이지입니다.</p>
+        </div>
+
+        <div class="date-box">
+          <div class="label">오늘 날짜</div>
+          <div id="todayDate" class="date">불러오는 중</div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button class="primary-btn" onclick="loadNews()">최신 뉴스 불러오기</button>
+        <button class="sub-btn" onclick="window.location.reload()">페이지 새로고침</button>
+      </div>
+
+      <div id="status" class="status">최신 뉴스를 불러오는 중입니다...</div>
+      <div id="newsList" class="news-list">
+        <div class="loading">잠시만 기다려 주세요...</div>
+      </div>
+
+      <div class="footer-text">
+        Google News RSS 기반 뉴스 데이터를 요약해 보여주는 예시입니다.<br>
+        모바일에서도 보기 좋게 반응형으로 제작했습니다.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const RSS_URL = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko";
+    const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+
+    function setTodayDate() {
+      const today = new Date();
+      const formatted = today.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "long"
+      });
+      document.getElementById("todayDate").textContent = formatted;
+    }
+
+    function summarizeText(text) {
+      if (!text) return "요약 정보가 없습니다.";
+
+      const cleaned = text
+        .replace(/<[^>]*>/g, " ")
+        .replace(/&quot;/g, '"')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&#39;/g, "'")
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (cleaned.length <= 95) return cleaned;
+      return cleaned.slice(0, 95) + "...";
+    }
+
+    function formatNewsTime(dateString) {
+      if (!dateString) return "시간 정보 없음";
+      return new Date(dateString).toLocaleString("ko-KR", {
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function renderNews(newsItems) {
+      const newsList = document.getElementById("newsList");
+      newsList.innerHTML = "";
+
+      if (!newsItems.length) {
+        newsList.innerHTML = '<div class="loading">표시할 뉴스가 없습니다.</div>';
+        return;
+      }
+
+      newsItems.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "news-card";
+
+        const title = item.title || `뉴스 ${index + 1}`;
+        const summary = summarizeText(item.description || item.content || item.title);
+        const pubDate = formatNewsTime(item.pubDate);
+
+        card.innerHTML = `
+          <div class="card-top">
+            <span class="news-number">TOP ${index + 1}</span>
+            <span class="tag">${pubDate}</span>
+          </div>
+          <h3>${title}</h3>
+          <p>${summary}</p>
+          <div class="meta">
+            <span></span>
+            <a href="${item.link}" target="_blank">기사 원문 보기</a>
+          </div>
+        `;
+
+        newsList.appendChild(card);
+      });
+    }
+
+    async function loadNews() {
+      const status = document.getElementById("status");
+      const newsList = document.getElementById("newsList");
+
+      status.textContent = "실제 뉴스를 불러오는 중입니다...";
+      newsList.innerHTML = '<div class="loading">최신 뉴스를 가져오는 중입니다...</div>';
+
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw new Error("뉴스 데이터를 불러오지 못했습니다.");
+        }
+
+        const data = await response.json();
+        const items = (data.items || []).slice(0, 5);
+
+        renderNews(items);
+        status.textContent = `최신 뉴스 ${items.length}개를 불러왔습니다. 버튼을 눌러 다시 불러올 수 있습니다.`;
+      } catch (error) {
+        status.textContent = "뉴스를 불러오는 데 실패했습니다. 인터넷 연결 또는 실행 방식을 확인해 주세요.";
+        newsList.innerHTML = `
+          <div class="news-card">
+            <div class="card-top">
+              <span class="news-number">안내</span>
+              <span class="tag">실행 팁</span>
+            </div>
+            <h3>외부 뉴스 데이터를 불러오지 못했습니다.</h3>
+            <p>일부 환경에서는 HTML 파일을 그냥 열면 외부 데이터 요청이 제한될 수 있습니다. VS Code의 Live Server로 실행하면 더 안정적으로 확인할 수 있습니다.</p>
+            <div class="meta">
+              <span></span>
+              <a href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer" target="_blank">Live Server 보기</a>
+            </div>
+          </div>
+        `;
+        console.error(error);
+      }
+    }
+
+    setTodayDate();
+    loadNews();
+  </script>
+</body>
+</html>
